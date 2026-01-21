@@ -12,6 +12,15 @@
 
 import htmlToMrkdwn from 'html-to-mrkdwn-ts';
 
+/**
+ * Convert HTML to Slack mrkdwn, fixing bullet points
+ */
+function convertToSlackMrkdwn(html: string): string {
+	const result = htmlToMrkdwn(html).text;
+	// Replace * bullets with • to avoid conflict with Slack's bold syntax
+	return result.replace(/^\* /gm, '• ');
+}
+
 // RTD Board API types
 interface RTDReply {
 	id: string;
@@ -182,7 +191,7 @@ async function mirrorTopic(
 	}
 
 	// Format the topic message
-	const topicContent = htmlToMrkdwn(topic.content).text;
+	const topicContent = convertToSlackMrkdwn(topic.content);
 	const slackMessage = `*${topic.subject}*\n\n${topicContent}`;
 
 	// Post to Slack with custom avatar
@@ -222,7 +231,7 @@ async function mirrorReply(reply: RTDReply, threadTs: string, env: AppEnv): Prom
 	}
 
 	// Format the reply message
-	const replyContent = htmlToMrkdwn(reply.content).text;
+	const replyContent = convertToSlackMrkdwn(reply.content);
 
 	// Post to Slack thread with custom avatar
 	const avatarUrl = getAvatarUrl(reply.displayName);
