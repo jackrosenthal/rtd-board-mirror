@@ -11,5 +11,8 @@
 	"devDependencies": {
 		"typescript": "^5.5.2",
 		"wrangler": "^4.59.3"
+	},
+	"dependencies": {
+		"html-to-mrkdwn-ts": "^1.1.0"
 	}
 }
